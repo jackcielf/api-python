@@ -1,52 +1,83 @@
 from flask import Blueprint, request, jsonify
-from models import User
 from schemas import user_schema, users_schema
+from sqlalchemy.exc import IntegrityError
+from models import User
 from config import db
 
 user_blueprint = Blueprint('user', __name__)
 
 @user_blueprint.route('/user', methods=['POST'])
 def add_user():
-    for item in request.json:
-        nome = item['nome']
-        email = item['email']
-        telefone = item['telefone']
-        genero = item['genero']
-    new_user = User(nome=nome, email=email, telefone=telefone, genero=genero)
-    db.session.add(new_user)
-    db.session.commit()
-    return user_schema.jsonify(new_user)
+    try:
+        for item in request.json:
+            nome = item['nome']
+            email = item['email']
+            senha = item['senha']
+            telefone = item['telefone']
+            genero = item['genero']
+            data_nas = item['data_nas']
+        new_user = User(nome=nome, email=email, senha=senha, telefone=telefone, genero=genero, data_nas=data_nas)
+        db.session.add(new_user)
+        try: # Verifica email já existente
+            db.session.commit()
+            return user_schema.jsonify(new_user), 201
+        except IntegrityError:
+            db.session.rollback()
+            return jsonify({ "message": "Email já cadastrado." }), 400
+    except Exception as e:
+        return jsonify({ "error": str(e) }), 500
 
 @user_blueprint.route('/user', methods=['GET'])
 def get_users():
-    all_users = User.query.order_by(User.id_usuario.asc()).all()
-    result = users_schema.dump(all_users)
-    return jsonify(result)
+    try:
+        all_users = User.query.order_by(User.id_usuario.asc()).all()
+        result = users_schema.dump(all_users)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({ "error": str(e) }), 500
 
 @user_blueprint.route('/user/<id>', methods=['GET'])
 def get_user(id):
-    user = User.query.get(id)
-    return user_schema.jsonify(user)
+    try:
+        user = User.query.get(id)
+        if user is None:
+            return jsonify({ "message": "Usuário não encontrado." }), 404
+        return user_schema.jsonify(user)
+    except Exception as e:
+        return jsonify({ "error": str(e) }), 500
 
 @user_blueprint.route('/user/<id>', methods=['PUT'])
 def update_user(id):
-    user = User.query.get(id)
-
-    for item in request.json:
-        nome = item['nome']
-        email = item['email']
-        telefone = item['telefone']
-        genero = item['genero']
-    user.nome = nome
-    user.email = email
-    user.telefone = telefone
-    user.genero = genero
-    db.session.commit()
-    return user_schema.jsonify(user)
+    try:
+        user = User.query.get(id)
+        if user is None:
+            return jsonify({ "message": "Usuário não encontrado." }), 404
+        for item in request.json:
+            nome = item['nome']
+            email = item['email']
+            senha = item['senha']
+            telefone = item['telefone']
+            genero = item['genero']
+            data_nas = item['data_nas']
+        user.nome = nome
+        user.email = email
+        user.senha = senha
+        user.telefone = telefone
+        user.genero = genero
+        user.data_nas = data_nas
+        db.session.commit()
+        return user_schema.jsonify({ "message": "Dados atualizados com sucesso." })
+    except Exception as e:
+        return jsonify({ "error": str(e) }), 500
 
 @user_blueprint.route('/user/<id>', methods=['DELETE'])
 def delete_user(id):
-    user = User.query.get(id)
-    db.session.delete(user)
-    db.session.commit()
-    return user_schema.jsonify(user)
+    try:
+        user = User.query.get(id)
+        if user is None:
+            return jsonify({ "message": "Usuário não encontrado." }), 404
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({ "message": "Usuário deletado com sucesso." })
+    except Exception as e:
+        return jsonify({ "error": str(e) }), 500
