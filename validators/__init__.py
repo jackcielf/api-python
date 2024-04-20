@@ -1,0 +1,1 @@
+from .user_validator import validate_email, validate_telefone
