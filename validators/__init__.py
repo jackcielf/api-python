@@ -1,1 +1,1 @@
-from .user_validator import validate_email, validate_telefone
+from .user_validator import *
