@@ -4,6 +4,8 @@ from controllers import user_blueprint
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:jakki@localhost/db_test'
+app.config['SECRET_KEY'] = 'secret'
+
 db.init_app(app)
 ma.init_app(app)
 

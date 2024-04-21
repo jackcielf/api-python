@@ -27,11 +27,8 @@ class User(db.Model):
     self.genero = genero
     self.data_nas = data_nas
 
-  def verify_senha(self, senha):
+  def verify_password(self, senha) -> bool:
     return crypt_context.verify(senha, self.senha)
-  
-  def __repr__(self) -> str:
-    return f"<User: { self.nome }>"
   
   @validates('email')
   def validate_email(self, key, email): # "key" não é usado, mas precisa estar na função
