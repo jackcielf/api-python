@@ -1,1 +1,2 @@
 from .user_controller import user_blueprint
+from .project_controller import project_blueprint

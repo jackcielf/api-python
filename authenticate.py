@@ -12,10 +12,10 @@ def jwt_required(f):
             token = request.headers["authorization"]
 
         if not token:
-            return jsonify({ "error": "Faça login para acessar essa rota." }), 403
+            return jsonify({ "error": "Faça login para acessar essa rota" }), 403
         
         if not "Bearer" in token:
-            return jsonify({ "error": "Token inválido." }), 401
+            return jsonify({ "error": "Token inválido" }), 401
 
         try:
             token_pure = token.replace("Bearer ", "")
@@ -23,7 +23,7 @@ def jwt_required(f):
             current_user = User.query.get(decoded['id'])
         except Exception as e:
             return jsonify({
-                "message": "Token inválido.",
+                "message": "Token inválido",
                 "error": str(e)
             }), 401
         

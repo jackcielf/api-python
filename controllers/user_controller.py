@@ -102,7 +102,7 @@ def login():
     
     expiration_token_time = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=10)
     payload = {
-        "id": user.id_usuario,
+        "id": user.id_user,
         "exp": expiration_token_time
     }
 

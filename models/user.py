@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 from sqlalchemy.orm import validates
-from sqlalchemy.sql import func
+from sqlalchemy import func
+from models import project_user
 from validators import *
 from config import db
 import uuid
@@ -8,8 +9,8 @@ import uuid
 crypt_context = CryptContext(schemes=['bcrypt_sha256'])
 
 class User(db.Model):
-  __tablename__ = 'tb_usuario'
-  id_usuario = db.Column(db.String(32), primary_key=True, default=lambda: str(uuid.uuid4()).replace('-', ''))
+  __tablename__ = 'tb_users'
+  id_user = db.Column(db.String(100), primary_key=True, default=lambda: str(uuid.uuid4()).replace('-', ''))
   name = db.Column(db.String(100), nullable=False)
   email = db.Column(db.String(120), unique=True, nullable=False)
   password = db.Column(db.String(255), nullable=False)
@@ -17,6 +18,9 @@ class User(db.Model):
   gender = db.Column(db.Enum('1', '2'))
   date_birth = db.Column(db.Date)
   created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
+  is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+  projects = db.relationship('Project', secondary=project_user, back_populates='users')
 
   def __init__(self, name, email, password, fone, gender, date_birth):
     self.name = name
