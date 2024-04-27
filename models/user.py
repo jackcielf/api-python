@@ -1,7 +1,6 @@
 from passlib.context import CryptContext
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy import func
-from models import project_user
 from validators import *
 from config import db
 import uuid
@@ -20,7 +19,7 @@ class User(db.Model):
   created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
   is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
-  projects = db.relationship('Project', secondary=project_user, back_populates='users')
+  projects = relationship("Project", back_populates="user")
 
   def __init__(self, name, email, password, fone, gender, date_birth):
     self.name = name

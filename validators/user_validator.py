@@ -31,8 +31,8 @@ def validate_gender(gender):
 
 def validate_date_birth(date):
     try:
-        date_obj = datetime.strptime(date, '%d-%m-%Y')
+        date_obj = datetime.strptime(date, '%Y-%m-%d')
         assert date_obj <= datetime.now(), "Data de nascimento inválida"
         return date
     except ValueError:
-        raise AssertionError("Data de nascimento inválida")
+        raise AssertionError("Erro ao adicionar data de nascimento")
