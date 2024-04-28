@@ -21,15 +21,21 @@ def validate_password(password):
   return password
 
 def validate_fone(fone):
+  if not fone:
+     return None
   assert len(fone) == 11, "O telefone deve ter 11 caracteres"
   assert re.match(r"^[1-9][0-9]{10}$", fone), "Telefone inválido"
   return fone
 
 def validate_gender(gender):
+  if not gender:
+    return None
   assert gender in [None, "1", "2"], "Gênero inválido"
   return gender
 
 def validate_date_birth(date):
+    if not date:
+      return None
     try:
         date_obj = datetime.strptime(date, '%Y-%m-%d')
         assert date_obj <= datetime.now(), "Data de nascimento inválida"

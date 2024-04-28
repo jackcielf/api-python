@@ -16,7 +16,7 @@ class Project(db.Model):
 
   user = relationship("User", back_populates="projects")
 
-  def __init__(self, title, description=None, image=None, id_user=None):
+  def __init__(self, title, description, image, id_user=None):
     self.title = title
     self.slug = title
     self.description = description
@@ -34,3 +34,7 @@ class Project(db.Model):
   @validates('image')
   def validate_image(self, key, image):
     return validate_image(image)
+  
+  @validates('description')
+  def validate_description(self, key, description):
+    return validate_description(description)

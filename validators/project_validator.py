@@ -15,9 +15,13 @@ def validate_slug(slug):
   return slug
 
 def validate_description(description):
+  if not description:
+    return None
   assert len(description) <= 255, "A descrição deve ter no máximo 255 caracteres"
   return  description
 
 def validate_image(image):
+  if not image:
+    return None
   assert len(image) <= 255, "A imagem deve ter no máximo 255 caracteres"
   return image
