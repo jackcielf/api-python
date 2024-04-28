@@ -86,11 +86,11 @@ def delete(id):
       "error": str(error)
     }), 500
   
-@project_blueprint.route('/project/<project_id>', methods=['PATCH'])
+@project_blueprint.route('/project/<id>', methods=['PATCH'])
 @jwt_required
-def init_project(project_id, current_user):
+def init_project(id, current_user):
   try:
-    project = Project.query.get(project_id)
+    project = Project.query.get(id)
     print(project)
     if not current_user and not project:
       return jsonify({ "error": "Usuário ou projeto não encontrado" }), 404
