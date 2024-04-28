@@ -86,7 +86,7 @@ def delete(id):
       "error": str(error)
     }), 500
   
-@project_blueprint.route('/project/<project_id>/init', methods=['PATCH'])
+@project_blueprint.route('/project/<project_id>', methods=['PATCH'])
 @jwt_required
 def init_project(project_id, current_user):
   try:
